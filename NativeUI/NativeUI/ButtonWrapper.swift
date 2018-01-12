@@ -22,19 +22,15 @@ class ButtonWrapper: JSObject, ButtonWrapperProtocol {
     
     override init() {
         super.init()
-        button = UIButton(type: .System)
-        button.addTarget(self, action: Selector("didTap:"), forControlEvents: .TouchUpInside)
-        
-        // Embedding button inside root view controller
-        let app = UIApplication.sharedApplication()
-        let rootVC = app.windows.first!.rootViewController!
-        rootVC.view.addSubview(button)
+        button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(didTap(sender:)), for: .touchUpInside)
+        let rootVC = UIApplication.shared.windows.first!.rootViewController!
+        rootVC.view.addSubview(button) // Embedding button inside root view controller
     }
-    
     
     dynamic var text: String {
         get { return button.titleLabel?.text ?? "" }
-        set(value) { button.setTitle(value, forState: .Normal) }
+        set(value) { button.setTitle(value, for: .normal) }
     }
     
     
@@ -44,10 +40,9 @@ class ButtonWrapper: JSObject, ButtonWrapperProtocol {
         }
     }
     
-    
-    func didTap(sender: AnyObject) {
-        if let onClick = this?.value.valueForProperty("onClick") {
-            onClick.callWithArguments([])
+    @objc func didTap(sender: AnyObject) {
+        if let onClick = this?.value.forProperty("onClick") {
+            onClick.call(withArguments: [])
         }
     }
 }
